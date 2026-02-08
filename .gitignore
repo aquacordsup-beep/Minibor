@@ -38,6 +38,9 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# Project specific - optional, kommentiere aus was du NICHT ignorieren willst
+# Project specific
+*.bat
+
+# Uncomment to ignore build artifacts:
 # *.whl
-# *.bat
+# dist/
