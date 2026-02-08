@@ -1,0 +1,39 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install twine
+      run: pip install twine
+
+    - name: Publish to PyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        # Finde die .whl Datei
+        WHL_FILE=$(find . -maxdepth 1 -name "*.whl" -type f | head -n 1)
+        if [ -z "$WHL_FILE" ]; then
+          echo "Keine .whl Datei gefunden"
+          exit 1
+        fi
+        echo "Uploading: $WHL_FILE"
+        twine upload "$WHL_FILE"
